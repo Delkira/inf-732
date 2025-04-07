@@ -43,4 +43,9 @@ export class NotasController {
   async remove(@Param('id') id: string): Promise<void> {
     return this.notasService.remove(+id);
   }
+
+  @Get('titulo/:title')
+  async findByTitle(@Param('title') title: string): Promise<Nota[]> {
+    return this.notasService.findByTitle(title);
+  }
 }

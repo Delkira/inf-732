@@ -31,4 +31,9 @@ export class TareaController {
     async remove(@Param('id') id: string): Promise<void> {
         return this.tareaService.remove(+id);
     }
+
+    @Get('titulo/:title')
+    async findByTitle(@Param('title') title: string): Promise<Tarea[]> {
+        return this.tareaService.findByTitle(title);
+    }
 }

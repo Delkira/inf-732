@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTareaDto } from './dto/create-tarea.dto';
 import { Tarea } from './tarea.entity';
 import { Repository } from 'typeorm';
@@ -21,7 +21,7 @@ export class TareaService {
     async findOne(id: number): Promise<Tarea> {
         const tarea = await this.tareaRepository.findOneBy({ id });
         if (!tarea) {
-            throw new Error(`Tarea con ID ${id} no encontrada`);
+            throw new NotFoundException(`Tarea con ID ${id} no encontrada`);
         }
         return tarea;
     }
@@ -32,7 +32,15 @@ export class TareaService {
     async remove(id: number): Promise<void> {
         const result = await this.tareaRepository.delete(id);
         if (result.affected === 0) {
-            throw new Error(`Tarea con ID ${id} no encontrada`);
+            throw new NotFoundException(`Tarea con ID ${id} no encontrada`);
         }
     }
+    async findByTitle(title: string): Promise<Tarea[]> {
+        const tareas = await this.tareaRepository.find({ where: { title } });
+        if (tareas.length === 0) {
+            throw new NotFoundException(`Tarea con el título ${title} no encontrada`);
+        }
+        return tareas; 
+    }
+
 }

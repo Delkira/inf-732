@@ -1,0 +1,65 @@
+en el cmd 
+
+ver versión de node
+node -v
+
+ver versión de npm
+npm -v
+
+ver versión de nest
+nest -v
+
+si no tiene nest instalar
+npm install -g @nestjs/cli
+
+crear proyecto 
+
+creamos una carpeta en donde se crearan los proyectos estando en la carpeta abre el cmd
+
+creamos nuestro proyecto
+nest new miproyecto-app
+
+entarmos a la carpeta 
+cd miproyecto-app
+
+abrimos visual studio code
+code . 
+
+creamos el modulo
+nest generate module calculadora
+
+creamos el servicio
+nest generate service calculadora
+
+creamos el controlador
+nest generate controller calculadora
+
+para ejecutar el proyecto 
+npm run start
+
+para ejecutar las pruebas
+npm run test
+
+base de datos
+tiene que estar en la carpeta y en cmd
+npm install --save typeorm mysql2
+npm install --save @nestjs/typeorm
+npm install --save @nestjs/config
+npm install --save class-validator class-transformer
+
+en la carpeta donde esta el modulo, servicio, controlador que creamos tenemos que crear un nuevo archivo con el nombre de 
+'nombre de la capeta'.entity.ts
+
+y declaramos los componentes de 'nombre de la capeta'.entity.ts
+después importamos en 'nombre de la capeta'.module.ts
+imports: [TypeOrmModule.forFeature(['Nombre de la clase de entity,ts'])], dentro de @module
+
+después creamos la carpeta dto y el archivo create-'nombre de la carpeta'.dto.ts
+en el cual creamos la clase Create"nombre carpeta"Dto
+
+en el archivo de 'nombre carpeta'.service.ts declaramos un constructor 
+
+después pasamos a el controlador
+
+los datos de conexión van en el app.module.ts
+

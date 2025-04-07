@@ -33,6 +33,7 @@ describe('NotasController', () => {
             create: jest.fn().mockResolvedValue(mockNota),
             findOne: jest.fn().mockResolvedValue(mockNota),
             findAll: jest.fn().mockResolvedValue([mockNota]),
+            findByTitle: jest.fn().mockResolvedValue([mockNota]),
             update: jest.fn().mockResolvedValue(mockNota),
             remove: jest.fn().mockResolvedValue(undefined),
           },
@@ -42,8 +43,7 @@ describe('NotasController', () => {
 
     controller = module.get<NotasController>(NotasController);
     service = module.get<NotasService>(NotasService);
-
-    // Limpiar los mocks antes de cada prueba
+    
     jest.clearAllMocks();
   });
 

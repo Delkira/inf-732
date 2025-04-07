@@ -43,4 +43,15 @@ export class NotasService {
       throw new NotFoundException(`Nota con ID ${id} no encontrada`);
     }
   }
+
+    async findByTitle(title: string): Promise<Nota[]> {
+        const nota = await this.notasRepository.find({ where: { title } });
+        if (nota.length === 0) {
+            throw new NotFoundException(`nota con el título ${title} no encontrada`);
+        }
+        return nota; 
+    }
+  
+  
+
 }
