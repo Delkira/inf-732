@@ -1,17 +1,18 @@
-import { Controller, Post, Get, Body, Put, Param, Delete } from '@nestjs/common'; // Agregado Body, Post y Get
+import { Controller,  Get,  Post,  Body,  Param,  Put,  Delete,} from '@nestjs/common';
 import { TareaService } from './tarea.service';
+import { CreateTareaDto } from './dto/create-tarea.dto';
 import { Tarea } from './tarea.entity';
-import { CreateTareaDto } from './dto/create-tarea.dto'; // Asegúrate de que este archivo exista
+import { UpdateTareaDto } from './dto/update-tarea.dto';
 
 @Controller('tarea')
 export class TareaController {
-    constructor(private readonly tareaService: TareaService) {} // Eliminado paréntesis adicional
+    constructor(private readonly tareaService: TareaService) {}
 
     @Post()
     async create(@Body() createTareaDto: CreateTareaDto): Promise<Tarea> {
         return this.tareaService.create(createTareaDto);
     }
-    
+
     @Get()
     async findAll(): Promise<Tarea[]> {
         return this.tareaService.findAll();
@@ -23,7 +24,7 @@ export class TareaController {
     }
 
     @Put(':id')
-    async update(@Param('id') id: string, @Body() updateTareaDto: CreateTareaDto): Promise<Tarea> { // Cambiado UpdateTareaDto a CreateTareaDto
+    async update(@Param('id') id: string,@Body() updateTareaDto: UpdateTareaDto): Promise<Tarea> {
         return this.tareaService.update(+id, updateTareaDto);
     }
 

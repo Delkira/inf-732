@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTareaDto } from './dto/create-tarea.dto';
 import { Tarea } from './tarea.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class TareaService {
         }
     }
     async findByTitle(title: string): Promise<Tarea[]> {
-        const tareas = await this.tareaRepository.find({ where: { title } });
+        const tareas = await this.tareaRepository.find({ where: { title: Like(`%${title}%`) } });
         if (tareas.length === 0) {
             throw new NotFoundException(`Tarea con el título ${title} no encontrada`);
         }

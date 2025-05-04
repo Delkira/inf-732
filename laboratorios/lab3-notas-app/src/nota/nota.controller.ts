@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Put,
-  Delete,
-} from '@nestjs/common';
+import { Controller,  Get,  Post,  Body,  Param,  Put,  Delete,} from '@nestjs/common';
 import { NotasService } from './nota.service';
 import { Nota } from './nota.entity';
 import { CreateNotaDto } from './dto/create-nota.dto';
@@ -21,21 +13,18 @@ export class NotasController {
     return this.notasService.create(createNotaDto);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Nota> {
-    return this.notasService.findOne(+id);
-  }
-
   @Get()
   async findAll(): Promise<Nota[]> {
     return this.notasService.findAll();
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Nota> {
+    return this.notasService.findOne(+id);
+  }
+
   @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateNotaDto: UpdateNotaDto,
-  ): Promise<Nota> {
+  async update(@Param('id') id: string,@Body() updateNotaDto: UpdateNotaDto): Promise<Nota> {
     return this.notasService.update(+id, updateNotaDto);
   }
 

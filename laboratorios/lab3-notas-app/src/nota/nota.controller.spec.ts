@@ -9,6 +9,7 @@ import { Nota } from './nota.entity';
 describe ('NotasController', () => {
   let controller: NotasController;
   let service: NotasService;
+
   beforeEach(async () => {
     const mockService = {
       create: jest.fn(),
@@ -39,15 +40,15 @@ describe ('NotasController', () => {
   });
 
   describe('create', () => {
-    it ('should create a nota', async () => {
-      const mockNota = {
+    it ('deberia crear una nota', async () => {
+      const mockNota: Nota = {
         id: 1,
-        title: 'Test Nota',
-        content: 'This is a test nota',
+        title: 'Nota 1',
+        content: 'Contenido de la nota 1',
       };
       const CreateNotaDto: CreateNotaDto = {
-        title: 'Test Nota',
-        content: 'This is a test nota',
+        title: 'Nota 1',
+        content: 'Contenido de la nota 1',
       };
       //simulamos que el servicio devuelve la nota creada
       jest.spyOn(service, 'create').mockResolvedValue(mockNota);
@@ -146,7 +147,96 @@ describe ('NotasController', () => {
       expect(service.remove).toHaveBeenCalledWith(999);
     });
   });
-});
+  });
+
+  describe('findAll', () => {
+    it('deberia retornar todas las notas', async () => {
+      const mockNotas: Nota[] = [
+        {
+          id: 1,
+          title: 'Test Nota 1',
+          content: 'This is a test nota 1',
+        },
+        {
+          id: 2,
+          title: 'Test Nota 2',
+          content: 'This is a test nota 2',
+        },
+      ];
+  
+      jest.spyOn(service, 'findAll').mockResolvedValue(mockNotas);
+  
+      const result = await controller.findAll();
+  
+      expect(result).toEqual(mockNotas);
+      expect(service.findAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('findOne', () => {
+    it('deberia retornar una nota por id', async () => {
+      const mockNota: Nota = {
+        id: 1,
+        title: 'Nota 1',
+        content: 'Contenido de la nota 1',
+      };
+  
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockNota);
+  
+      const result = await controller.findOne('1');
+  
+      expect(result).toEqual(mockNota);
+      expect(service.findOne).toHaveBeenCalledWith(1);
+    });
+    it('deberia lanzar NotFoundException si la nota no existe', async () => {
+      jest.spyOn(service, 'findOne').mockRejectedValue(new NotFoundException());
+  
+      await expect(controller.findOne('999')).rejects.toThrow(NotFoundException);
+      expect(service.findOne).toHaveBeenCalledWith(999);
+    });
+  });
+
+  describe('update', () => {
+    it('deberia actualizar una nota existente', async () => {
+      const mockNota: Nota = {
+        id: 1,
+        title: 'Nota 1',
+        content: 'Contenido 1',
+      };
+      const UpdateNotaDto: UpdateNotaDto = {
+        title: 'Nota actualizada',
+      };
+  
+      jest.spyOn(service, 'update').mockResolvedValue(mockNota);
+  
+      const result = await controller.update('1', UpdateNotaDto);
+  
+      expect(result).toEqual(mockNota);
+      expect(service.update).toHaveBeenCalledWith(1, UpdateNotaDto);
+    });
+    it('deberia lanzar NotFoundException si la nota no existe', async () => {
+      jest.spyOn(service, 'update').mockRejectedValue(new NotFoundException());
+  
+      await expect(controller.update('999', {title:'Nota no existe'})).rejects.toThrow(NotFoundException);
+      expect(service.update).toHaveBeenCalledWith(999, {title:'Nota no existe'});
+    });
+  });
+
+  describe('remove', () => {
+    it('deberia eliminar una nota existente', async () => {
+      jest.spyOn(service, 'remove').mockResolvedValue(undefined);
+  
+      await controller.remove('1');
+  
+      expect(service.remove).toHaveBeenCalledWith(1);
+    });
+    it('deberia lanzar NotFoundException si la nota no existe', async () => {
+      jest.spyOn(service, 'remove').mockRejectedValue(new NotFoundException());
+  
+      await expect(controller.remove('999')).rejects.toThrow(NotFoundException);
+      expect(service.remove).toHaveBeenCalledWith(999);
+    });
+  });
 
   describe('findByTitle', () => {
     it('deberia retornar notas por titulo', async () => {

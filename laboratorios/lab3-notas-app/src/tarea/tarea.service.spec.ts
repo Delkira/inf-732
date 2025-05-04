@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TareaService } from './tarea.service';
-import { ObjectLiteral, Repository, UpdateResult } from 'typeorm';
+import { Like, ObjectLiteral, Repository, UpdateResult } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Tarea } from './tarea.entity';
 import { NotFoundException } from '@nestjs/common';
@@ -181,7 +181,7 @@ describe('TareaService', () => {
         const result = await service.findByTitle(title);
   
         expect(result).toEqual(tareasEncontradas);
-        expect(repository.find).toHaveBeenCalledWith({ where: { title } });
+        expect(repository.find).toHaveBeenCalledWith({ where: { title: Like(`%${title}%`) } });
       });
     });
   
@@ -192,7 +192,7 @@ describe('TareaService', () => {
   
         await expect(service.findByTitle(title)).rejects.toThrow(NotFoundException); 
   
-        expect(repository.find).toHaveBeenCalledWith({ where: { title } });
+        expect(repository.find).toHaveBeenCalledWith({ where: { title: Like(`%${title}%`) } });
       });
     });
   });

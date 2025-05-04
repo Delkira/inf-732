@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotasService } from './nota.service';
-import { ObjectLiteral, Repository, UpdateResult } from 'typeorm';
+import { Like, ObjectLiteral, Repository, UpdateResult } from 'typeorm';
 import { Nota } from './nota.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
@@ -171,29 +171,25 @@ describe('NotasService', () => {
   });
 
   describe('findByTitle', () => {
-    describe('cuando existen notas con el título buscado', () => {
-      it('debería devolver las notas ', async () => {
-        const title = 'Test Nota';
-        const notasEncontradas = [{ ...mockNota, title }]; 
-  
-        jest.spyOn(repository, 'find').mockResolvedValue(notasEncontradas as Nota[]); 
-  
-        const result = await service.findByTitle(title);
-  
-        expect(result).toEqual(notasEncontradas);
-        expect(repository.find).toHaveBeenCalledWith({ where: { title } });
-      });
+    it('deberia encontrar una nota por titulo', async () => {
+      const title = 'Test Nota';
+      jest.spyOn(repository, 'find').mockResolvedValue([mockNota] as Nota[]);
+
+      const result = await service.findByTitle(title);
+      expect(result).toEqual([mockNota]);
+
+      expect(repository.find).toHaveBeenCalledWith({ where: { title: Like(`%${title}%`) } });
     });
-  
-    describe('cuando no existen notas con el título buscado', () => {
-      it('debería lanzar una excepción NotFoundException si no existen notas', async () => {
-        const title = 'Test Nota';
-        jest.spyOn(repository, 'find').mockResolvedValue([]); 
-  
-        await expect(service.findByTitle(title)).rejects.toThrow(NotFoundException); 
-  
-        expect(repository.find).toHaveBeenCalledWith({ where: { title } });
-      });
+
+    it('deberia lanzar NotFoundException si no se encuentra la nota', async () => {
+      const title = 'Nota Inexistente';
+      jest.spyOn(repository, 'find').mockResolvedValue([]);
+
+      await expect(service.findByTitle(title)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(repository.find).toHaveBeenCalledWith({ where: { title: Like(`%${title}%`),} });
     });
   });
 });

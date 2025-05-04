@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Nota } from './nota.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateNotaDto } from './dto/create-nota.dto';
 import { UpdateNotaDto } from './dto/update-nota.dto';
 
@@ -44,13 +44,18 @@ export class NotasService {
     }
   }
 
-    async findByTitle(title: string): Promise<Nota[]> {
-        const nota = await this.notasRepository.find({ where: { title } });
-        if (nota.length === 0) {
-            throw new NotFoundException(`nota con el título ${title} no encontrada`);
-        }
-        return nota; 
+  async findByTitle(title: string): Promise<Nota[]> {
+    const nota = await this.notasRepository.find({
+        where: {
+            title: Like(`%${title}%`),
+        },
+    });
+
+    if (nota.length === 0) {
+        throw new NotFoundException(`nota con el título ${title} no encontrada`);
     }
+    return nota;
+}
   
   
 
